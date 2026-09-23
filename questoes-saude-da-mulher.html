@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Questões · Saúde da Mulher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#0A0E14; --surface:#10161F; --ink:#DCE6F0; --muted:#7A8A9C; --line:#1E2A38;
+  --accent:#22D3EE; --accent-soft:#0E2A33;
+  --ok:#34D399; --ok-soft:#0C2A22; --bad:#F87171; --bad-soft:#2E1417; --idle:#1C2633;
+  --serif:"Space Grotesk", system-ui, sans-serif;
+  --sans:"Space Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100vh;background-color:var(--bg);background-image:linear-gradient(rgba(34,211,238,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(34,211,238,.035) 1px,transparent 1px);background-size:32px 32px;color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:720px;margin:0 auto;padding:32px 20px 64px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header.top{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin-bottom:28px}
+.brand{font-family:var(--sans);font-size:1.4rem;font-weight:700;letter-spacing:-.02em;margin:0}
+.brand::before{content:"> ";color:var(--accent);font-family:var(--mono)}
+.brand small{display:block;font-family:var(--mono);font-size:.85rem;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:2px}
+.link{background:none;border:0;padding:4px 0;color:var(--muted);font-size:.9rem;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--ink)}
+
+/* setup */
+.intro{font-family:var(--serif);font-size:1.15rem;line-height:1.6;max-width:60ch;margin:0 0 28px}
+.group{margin-bottom:28px}
+.group h2{font-size:.95rem;font-weight:600;margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 14px;font-size:.92rem;display:inline-flex;gap:8px;align-items:center}
+.chip .n{color:var(--muted);font-size:.8rem}
+.chip[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+.chip[aria-pressed="true"] .n{color:inherit;opacity:.75}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.primary{background:var(--accent);color:#04121A;box-shadow:0 0 18px rgba(34,211,238,.25);border:0;border-radius:10px;padding:13px 22px;font-weight:600}
+.primary:disabled{opacity:.35;cursor:not-allowed}
+.ghost:disabled{opacity:.35;cursor:not-allowed}
+.ghost{background:transparent;border:1px solid var(--line);border-radius:10px;padding:12px 18px}
+.note{color:var(--muted);font-size:.88rem;margin-top:14px}
+
+/* tick strip — the one memorable element */
+.strip{display:flex;gap:3px;margin-bottom:22px;flex-wrap:nowrap;overflow:hidden}
+.tick{flex:1 1 0;min-width:2px;height:6px;border-radius:2px;background:var(--idle);transition:background .25s}
+.tick.cur{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.tick.ok{background:var(--ok);box-shadow:0 0 6px rgba(52,211,153,.5)}
+.tick.skip{background:transparent;box-shadow:inset 0 0 0 1px var(--muted)}
+.tick.bad{background:var(--bad);box-shadow:0 0 6px rgba(248,113,113,.5)}
+
+.meta{font-family:var(--mono);font-size:.8rem;display:flex;justify-content:space-between;align-items:baseline;gap:12px;color:var(--muted);font-size:.88rem;margin-bottom:14px}
+.topic{color:var(--accent);font-weight:600}
+.stem{font-family:var(--sans);font-size:1.18rem;line-height:1.6;margin:0 0 22px;font-weight:400}
+.opts{display:flex;flex-direction:column;gap:10px;margin:0;padding:0;list-style:none}
+.opt{width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start;line-height:1.45}
+.opt:hover:not(:disabled){border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-soft)}
+.opt:disabled{cursor:default}
+.opt .l{font-family:var(--mono);width:24px;height:24px;border-radius:6px;border:1px solid var(--line);display:grid;place-items:center;font-size:.8rem;font-weight:600;color:var(--muted)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.right .l{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt.wrong .l{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.opt.dim{opacity:.55}
+
+.fb{margin-top:20px;border-left:3px solid var(--accent);padding:4px 0 4px 16px;animation:in .25s ease-out}
+.fb .v{font-weight:700;margin:0 0 6px}
+.fb .v.ok{color:var(--ok)} .fb .v.bad{color:var(--bad)}
+.fb p{margin:0 0 8px;max-width:68ch}
+.fb .cm{list-style:none;margin:12px 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.fb .cm li{display:grid;grid-template-columns:22px 1fr;gap:8px;font-size:.9rem;color:var(--muted)}
+.fb .cm li b{font-family:var(--mono);color:var(--muted)}
+.fb .cm li.k,.fb .cm li.k b{color:var(--ok)}
+.fb .src{color:var(--muted);font-size:.78rem;font-family:var(--mono)}
+@keyframes in{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.fb{animation:none}.tick{transition:none}}
+
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.score{color:var(--muted);font-size:.82rem;font-family:var(--mono)}
+.kbd{color:var(--muted);font-size:.8rem;margin-top:18px}
+
+/* results */
+.big{font-family:var(--mono);color:var(--accent);font-size:3.2rem;font-weight:600;line-height:1;margin:6px 0 4px}
+.big span{font-size:1.2rem;color:var(--muted);font-weight:400}
+.lead{color:var(--muted);margin:0 0 28px}
+table.bt{width:100%;border-collapse:collapse;font-size:.93rem;margin-bottom:28px}
+.bt td{padding:10px 0;border-bottom:1px solid var(--line)}
+.bt td.r{text-align:right;color:var(--muted);white-space:nowrap;padding-left:12px}
+.bar{height:4px;background:var(--idle);border-radius:2px;margin-top:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ok)}
+.rev{border-top:1px solid var(--line);padding:18px 0}
+.rev .stem{font-size:1.05rem;margin-bottom:10px}
+.rev .ans{font-size:.92rem;margin:4px 0}
+.rev .ans b{font-weight:600}
+.rev .ex{font-size:.9rem;color:var(--muted);margin-top:8px}
+.hidden{display:none!important}
+@media (max-width:520px){
+  .wrap{padding:22px 16px 48px}
+  .stem{font-size:1.1rem}
+  .big{font-size:2.6rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <h1 class="brand">Saúde da Mulher<small>Banco de questões a partir do seu material de aula</small></h1>
+    <button class="link hidden" id="quitBtn">Voltar ao início</button>
+  </header>
+
+  <!-- SETUP -->
+  <section id="setup">
+    <div class="group">
+      <h2>Ordem</h2>
+      <div class="chips">
+        <button class="chip" id="ordTopic" aria-pressed="true">Por tema</button>
+        <button class="chip" id="ordShuffle" aria-pressed="false">Embaralhada</button>
+      </div>
+    </div>
+    <div class="row">
+      <button class="primary" id="startBtn">Começar</button>
+      <span class="score" id="countLabel"></span>
+    </div>
+    <p class="note">Atalhos: 1–4 escolhem a alternativa, S pula, ← volta, Enter ou → avança.</p>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden" aria-live="polite">
+    <div class="strip" id="strip" aria-hidden="true"></div>
+    <div class="meta"><span class="topic" id="qTopic"></span><span id="qPos"></span></div>
+    <p class="stem" id="qStem"></p>
+    <ul class="opts" id="qOpts"></ul>
+    <div id="fb"></div>
+    <div class="nav">
+      <span class="score" id="liveScore"></span>
+      <div class="row"><button class="ghost" id="backBtn">Voltar</button><button class="ghost" id="skipBtn">Pular</button><button class="primary" id="nextBtn" disabled>Próxima</button></div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section id="results" class="hidden">
+    <div class="big" id="rPct"></div>
+    <p class="lead" id="rLead"></p>
+    <table class="bt" id="rTable"></table>
+    <div class="row" style="margin-bottom:28px">
+      <button class="primary" id="retryWrongBtn">Refazer erradas e puladas</button>
+      <button class="ghost" id="restartBtn">Novo simulado</button>
+    </div>
+    <div id="review"></div>
+  </section>
+</div>
+
+<script>
+const TOPICS = {
+  AP:"Amenorreia primária",
+  AS:"Amenorreia secundária",
+  HP:"Hiperprolactinemia",
+  SO:"SOMP e hiperandrogenismo",
+  DM:"Dismenorreia",
+  SU:"Sangramento uterino anormal",
+  CM:"Fisiologia do ciclo menstrual",
+  AN:"Anatomia do trato genital",
+  DS:"Diferenciação sexual",
+  PB:"Desenvolvimento puberal"
+};
+
+const SRC = {
+  amenS:"Slides Amenorreia (Prof. Cyro)",
+  amenA:"Apostila Amenorreia (anotações G. Sandoval)",
+  aula15:"Anotações da aula 15/09/2026",
+  hpA:"Anotações Hiperprolactinemia 19/09/2026",
+  pub:"Anotações Desenvolvimento Puberal 19/09/2026",
+  dismS:"Slides Dismenorreia (Prof. Cyro)",
+  sua:"Anotações Sangramento Uterino Anormal 19/09/2026",
+  cicS:"Slides Fisiologia do Ciclo Menstrual",
+  cicA:"Anotações Fisiologia do Ciclo (G. Sandoval)",
+  anaS:"Slides Anatomia/Embriologia – Trato Genital Feminino",
+  anaA:"Apostila Trato Genital e Diferenciação Sexual (G. Sandoval)"
+};
+
+const Q = [
+/* ================= AMENORREIA PRIMÁRIA ================= */
+{t:"AP",q:"Adolescente de 14 anos é levada à UBS porque nunca menstruou. Estatura adequada para a idade, olfato preservado, sem estigmas sindrômicos. Exame: ausência de desenvolvimento mamário e de pelos pubianos; genitália externa feminina. LH e FSH elevados. Ultrassonografia pélvica abdominal: útero presente, gônadas não visualizadas. Cariótipo: 46,XY. Qual a hipótese diagnóstica e a conduta mais adequada?",
+o:["Insensibilidade androgênica; gonadectomia e estrogênio isolado, pois não há útero","Síndrome de Swyer; remoção das gônadas e reposição de estrogênio associada a progestágeno","Síndrome de Turner; hormônio de crescimento e estrogênio isolado","Deficiência de 5-alfa-redutase; observar a virilização esperada na puberdade"],a:1,
+e:"Raciocínio em etapas: sem caracteres sexuais secundários + LH/FSH altos = hipogonadismo hipergonadotrófico (gonadal). Cariótipo 46,XY com fenótipo feminino completo por disgenesia gonadal = Síndrome de Swyer (deleção do SRY). Como não há testículo funcionante, não há hormônio anti-mülleriano e o útero se forma. Condutas: cromossomo Y → remoção das gônadas (risco de neoplasia); tem útero → estrogênio + progestágeno.",
+c:["Na insensibilidade androgênica o testículo existe e funciona: produz HAM, então útero e vagina estão ausentes, e a testosterona normal gera mamas por aromatização. O útero presente e a ausência de mamas afastam essa hipótese.","Correta. Gônada disgenética sem HAM permite o desenvolvimento dos ductos de Müller; o Y exige remoção gonadal e o útero exige progestágeno junto ao estrogênio.","Turner tem cariótipo 45,X (ou mosaico) e baixa estatura. Além disso, com útero presente o estrogênio isolado seria inadequado.","Na deficiência de 5-alfa-redutase o testículo produz HAM (útero ausente) e testosterona; a paciente não teria LH/FSH altos com gônada não funcionante."],
+s:["amenS","amenA","anaS"]},
+
+{t:"AP",q:"Menina de 14 anos, cariótipo 45,X confirmado, com baixa estatura importante, pescoço alado e tórax em escudo. A família deseja iniciar o desenvolvimento das mamas. A equipe observa que o crescimento ainda não se completou. Segundo o material, qual esquema e seguimento são adequados?",
+o:["Estradiol 1,0 mg/dia isolado e cariótipo anual","Estradiol 0,5 mg/dia associado a acetato de medroxiprogesterona 10 mg por 14 dias ao mês; ecocardiograma e RNM cardíaca a cada 3 anos e perfil tireoidiano anual","Estrogênios conjugados 0,625 mg/dia contínuos, sem progestágeno, e densitometria semestral","Adiar qualquer reposição até completar 18 anos para não prejudicar a estatura"],a:1,
+e:"A dose padrão é estradiol 1,0 mg/dia (ou 0,625 mg de estrogênios conjugados), reduzida à metade se o crescimento não estiver completo. Paciente com útero exige progestágeno (medroxiprogesterona 10 mg por 14 dias/mês). Turner confirmado: eco e RNM cardíaca a cada 3 anos + perfil tireoidiano anual (coarctação da aorta e tireoidopatia).",
+c:["A dose cheia não considera o crescimento incompleto, falta o progestágeno para a paciente com útero e o seguimento está errado.","Correta. Integra ajuste de dose, proteção endometrial e rastreio cardiovascular/tireoidiano.","Falta a proteção endometrial com progestágeno; o seguimento citado não consta no material.","O objetivo do tratamento é dar caracteres sexuais secundários e evitar osteoporose; não há indicação de adiar até os 18 anos."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Jovem de 16 anos, sem menarca, sem mamas e sem pelos pubianos. Durante a anamnese, a mãe comenta que a filha 'nunca sentiu cheiro de nada'. LH e FSH baixos. Qual a investigação complementar mais adequada, conforme o roteiro dos slides?",
+o:["Apenas cariótipo, pois LH/FSH baixos indicam causa gonadal","Tomografia ou ressonância do sistema nervoso central, prolactina + TSH e cariótipo","Ultrassonografia transvaginal para avaliar microcistos","Teste do ACTH com dosagem de 17-alfa-hidroxiprogesterona como primeiro exame"],a:1,
+e:"LH/FSH baixos = hipogonadismo hipogonadotrófico (central). O roteiro dos slides para esse grupo é: avaliação do SNC (TC ou RNM), prolactina + TSH e cariótipo. A anosmia sugere Síndrome de Kallmann, mas é preciso afastar tumores (craniofaringeoma) e outras causas centrais.",
+c:["LH/FSH baixos indicam causa central, e não gonadal; o cariótipo isolado é o exame do grupo com LH/FSH altos.","Correta. É o conjunto de exames previsto para gonadotrofinas baixas.","Sem caracteres sexuais secundários o problema é hipogonadismo; além disso, a via transvaginal é inadequada nesse contexto.","O teste do ACTH é indicado quando o cariótipo é normal, na suspeita de deficiência de 17-alfa-hidroxilase, e não como primeiro exame."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Adolescente de 14 anos, mamas e pelos pubianos bem desenvolvidos, nunca menstruou. Há 8 meses tem dor em baixo-ventre que aparece por alguns dias uma vez por mês. Ao exame da vulva, observa-se membrana abaulada e arroxeada no introito vaginal. A mãe pergunta se não seria melhor esperar até os 15 anos. Qual a conduta mais adequada?",
+o:["Aguardar até 15 anos, pois com caracteres sexuais secundários ainda não há critério de amenorreia primária","Solicitar ultrassonografia transvaginal e dosar LH/FSH antes de qualquer conduta","Realizar incisão do hímen (himenotomia) para permitir a saída do sangue retido","Indicar neovaginoplastia por suspeita de Síndrome de Rokitansky"],a:2,
+e:"Caracteres sexuais presentes indicam eixo funcionante; o problema é periférico. A dor cíclica mensal indica sangue menstrual produzido e retido, e o abaulamento arroxeado no introito confirma hímen imperfurado. O tratamento é a incisão cirúrgica simples do hímen. Esperar pelo critério etário seria ignorar um quadro obstrutivo sintomático.",
+c:["O corte de 15 anos serve para definir amenorreia primária, mas aqui há um diagnóstico obstrutivo evidente e sintomático, que não deve aguardar.","Com caracteres sexuais presentes não é preciso dosar hormônios, e a via transvaginal é inadequada em paciente com canal obstruído.","Correta. Himenotomia resolve a obstrução com excelente prognóstico.","Na Rokitansky não há dor, pois não existe endométrio para sangrar; o abaulamento do hímen aponta para obstrução baixa."],
+s:["amenA","anaA","amenS"]},
+
+{t:"AP",q:"Jovem de 17 anos, nunca menstruou, sem dor pélvica. Mamas e pelos pubianos e axilares normais. Vagina curta em fundo cego. Ultrassonografia pélvica abdominal: ausência de útero, ovários de aspecto normal. Ultrassonografia de rins: rim único. LH, FSH e estradiol normais. Sobre o caso, é correto afirmar:",
+o:["Trata-se de insensibilidade androgênica e há indicação de gonadectomia","Trata-se de Síndrome de Mayer-Rokitansky-Kuster-Hauser; a vagina pode ser tratada com dilatação ou neovaginoplastia, e o transplante uterino é possibilidade exclusiva de defeitos müllerianos","A ausência de dor indica que o endométrio está funcionante e retido","Deve-se iniciar estrogênio e progestágeno para induzir a menarca"],a:1,
+e:"Hormônios normais + caracteres sexuais normais = causa periférica. Ausência de útero, trompas e 2/3 superiores da vagina com ovários normais caracteriza a Rokitansky (10% das amenorreias primárias), que pode se associar à ausência renal unilateral (15%). Não dói porque não há endométrio. Tratamento: dilatação ou neovaginoplastia; transplante uterino é exclusivo dos defeitos müllerianos.",
+c:["Na insensibilidade androgênica os pelos são escassos ou ausentes e há testículos, não ovários. Pelos normais e ovários normais afastam essa hipótese.","Correta. O conjunto (pelos normais, ovários normais, sem útero, rim único) é típico.","É o contrário: não há dor porque não existe endométrio para sangrar e ficar represado.","Os ovários já produzem hormônios normalmente e não há útero; reposição hormonal não induziria menarca."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Jovem de 16 anos com amenorreia primária. Mamas desenvolvidas, mas pelos pubianos e axilares praticamente ausentes. Vagina curta em fundo cego; útero ausente à ultrassonografia; duas gônadas intra-abdominais. Testosterona elevada. Cariótipo 46,XY. Qual o diagnóstico e a conduta em relação às gônadas?",
+o:["Deficiência de 5-alfa-redutase; manter as gônadas para permitir a virilização","Insensibilidade androgênica; remoção das gônadas por laparoscopia pelo risco de neoplasia","Síndrome de Rokitansky; nenhuma conduta gonadal","Síndrome de Swyer; manter as gônadas e iniciar progestágeno"],a:1,
+e:"XY, testosterona alta, útero ausente (há HAM testicular) e pelos escassos: o hormônio existe, mas não age, pois falta o receptor androgênico. É a insensibilidade androgênica. Cromossomo Y com testículo abdominal indica remoção por laparoscopia (risco de neoplasia).",
+c:["Na deficiência de 5-alfa-redutase os pelos são presentes/intensos e há virilização; aqui os pelos são escassos.","Correta. Pelos escassos com testosterona alta = resistência androgênica; Y presente = gonadectomia.","Rokitansky tem cariótipo feminino, ovários normais e pelos normais.","Swyer não tem testosterona elevada (gônadas disgenéticas) e tem útero; além disso, o Y impõe a remoção gonadal."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Paciente registrada como menina ao nascer, cariótipo 46,XY, sem útero, com testículos presentes. Aos 14 anos apresenta engrossamento da voz, ganho de massa muscular, pelos intensos e aumento do clitóris. Qual perfil laboratorial é esperado?",
+o:["Testosterona baixa, di-hidrotestosterona alta, receptor androgênico ausente","Testosterona normal ou elevada, di-hidrotestosterona reduzida, receptor androgênico normal","Testosterona elevada, di-hidrotestosterona normal, receptor androgênico ausente","LH e FSH baixos, testosterona indetectável"],a:1,
+e:"A virilização na puberdade prova que a testosterona age (receptor normal). O fenótipo feminino ao nascer se explica pela falha de conversão de testosterona em DHT. Logo: deficiência de 5-alfa-redutase, com testosterona normal/↑, DHT reduzida/ausente, receptor normal.",
+c:["Se o receptor fosse ausente não haveria virilização; a testosterona não é baixa nessa condição.","Correta. É o perfil descrito na tabela comparativa dos slides.","É o perfil da insensibilidade androgênica, em que não há virilização.","Há testículo produtor de testosterona; esse perfil seria de causa central."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Adolescente de 15 anos, sem caracteres sexuais secundários, com hipertensão arterial grave. LH e FSH elevados, ACTH elevado. Cariótipo 46,XX. Realiza-se teste com ACTH em bolo. Qual resultado confirma a principal hipótese e qual o ponto fundamental do tratamento?",
+o:["Progesterona baixa e 17-alfa-hidroxiprogesterona alta; restrição de sódio","Progesterona muito elevada e 17-alfa-hidroxiprogesterona baixa; reposição de corticoide","Cortisol muito elevado; suspensão do ACTH endógeno com cirurgia","Testosterona elevada; gonadectomia"],a:1,
+e:"Hipogonadismo hipergonadotrófico com hipertensão grave e ACTH alto sugere deficiência de 17-alfa-hidroxilase: o defeito afeta também o cortisol, o ACTH sobe e desvia a síntese. O teste do ACTH mostra progesterona muito elevada com 17-OH-progesterona baixa. Pode ser fatal se não tratado; é fundamental repor corticoide.",
+c:["O padrão é o inverso, e a restrição de sódio não corrige a causa.","Correta. Repor cortisol suprime o ACTH e interrompe o estímulo excessivo.","O cortisol está comprometido nessa deficiência, não elevado.","Cariótipo XX, sem testículo; o problema é enzimático, não gonadal masculino."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Lactente com fenótipo feminino é internada por hiponatremia, hiperpotassemia e acidose. O cariótipo revela 46,XY. Em relação à doença mais provável, é correto afirmar:",
+o:["Há bloqueio da conversão de testosterona em di-hidrotestosterona","Há incapacidade de converter colesterol em pregnenolona, etapa inicial da esteroidogênese","É uma doença ligada ao Y, com herança paterna exclusiva","O quadro cursa tipicamente com hipertensão grave"],a:1,
+e:"Distúrbio hidroeletrolítico grave na infância com fenótipo feminino independentemente do cariótipo (XX ou XY) é a hiperplasia suprarrenal lipoide congênita: bloqueio colesterol → pregnenolona, que impede a síntese de todos os esteroides. Doença autossômica recessiva.",
+c:["Esse é o defeito da deficiência de 5-alfa-redutase, que não causa perda de sal.","Correta. Sem o primeiro passo não se forma nenhum esteroide; por isso o XY também tem fenótipo feminino.","O material descreve herança autossômica recessiva.","Hipertensão grave é característica da deficiência de 17-alfa-hidroxilase, e não da forma lipoide."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Menina de 14 anos sem sinais puberais. Olfato normal, estatura no limite inferior. LH e FSH baixos; RNM de crânio, prolactina e TSH normais; cariótipo 46,XX. Não há desnutrição, doença crônica ou atividade física intensa. Sobre a hipótese de atraso puberal fisiológico, assinale a correta:",
+o:["É o diagnóstico inicial e dispensa outros exames","É diagnóstico de exclusão; a idade óssea auxilia, mas a confirmação depende de exclusão e observação do caso","É confirmado por LH e FSH elevados","Exige gonadectomia profilática"],a:1,
+e:"O atraso fisiológico é causa de hipogonadismo hipogonadotrófico e é sempre diagnóstico de exclusão. A idade óssea ajuda, mas o diagnóstico é difícil e depende da exclusão das demais causas e da observação evolutiva.",
+c:["Só se chega a ele depois de excluir outras causas centrais.","Correta. É exatamente como os slides descrevem.","Gonadotrofinas altas indicariam causa gonadal, incompatível com atraso fisiológico.","Não há cromossomo Y; gonadectomia não tem indicação."],
+s:["amenS"]},
+
+{t:"AP",q:"Adolescente de 16 anos, virgem, caracteres sexuais secundários normais, sem dor pélvica, nunca menstruou. LH, FSH, prolactina, estradiol e progesterona normais. Qual o primeiro exame de imagem indicado e por quê?",
+o:["Ultrassonografia transvaginal, por maior resolução","Ultrassonografia pélvica por via abdominal, pois pode não haver canal vaginal pérvio","Ressonância de sela túrcica, pela possibilidade de prolactinoma","Histeroscopia diagnóstica"],a:1,
+e:"Hormônios normais = causa periférica (malformação mülleriana ou defeito de canal). O primeiro exame é a US pélvica abdominal, com exame clínico detalhado (podendo usar fibroscopia em virgens). A via transvaginal é inadequada em quem pode não ter vagina pérvia.",
+c:["Paciente virgem e com possível agenesia vaginal; a via transvaginal é inadequada.","Correta.","Prolactina normal; não há indicação de avaliar a hipófise.","Não é o primeiro exame; pode sequer haver acesso à cavidade."],
+s:["amenS","amenA"]},
+
+{t:"AP",q:"Mulher de 29 anos procura atendimento por infertilidade. Menstruou aos 13 anos, teve ciclos até os 27 e, desde então, está em amenorreia, com fogachos. Tem cariótipo 45,X/46,XX. Como o material explica esse quadro?",
+o:["Mosaicismo não permite menstruação em nenhum momento","No mosaicismo 45,X/46,XX cerca de 20% menstruam normalmente, e as manifestações podem surgir como infertilidade e menopausa precoce","Trata-se de Turner puro com erro de laboratório","É sempre causa central, com LH e FSH baixos"],a:1,
+e:"Os slides descrevem que no mosaicismo 45,X/46,XX cerca de 20% menstruam normalmente e as manifestações podem aparecer como infertilidade e menopausa precoce, como neste caso.",
+c:["Contradiz o dado de que 20% menstruam normalmente.","Correta.","O mosaicismo explica a menarca e a falência tardia; não há por que supor erro.","É causa gonadal (hipergonadotrófica), não central."],
+s:["amenS"]},
+
+/* ================= AMENORREIA SECUNDÁRIA ================= */
+{t:"AS",q:"Mulher de 27 anos, em uso de antidepressivo há 1 ano, relata amenorreia há 7 meses e saída de secreção leitosa pelas duas mamas. Vida sexual ativa, uso irregular de preservativo. Qual o primeiro exame a ser solicitado?",
+o:["Prolactina sérica","Ressonância de sela túrcica","Beta-HCG","LH e FSH"],a:2,
+e:"Mesmo com quadro sugestivo de hiperprolactinemia medicamentosa, o roteiro da amenorreia secundária começa sempre pelo beta-HCG: a gestação é o primeiro diagnóstico diferencial e também eleva a prolactina fisiologicamente.",
+c:["É um exame necessário, mas vem depois de excluir gestação.","Exame de imagem só após confirmar hiperprolactinemia e avaliar níveis/queixas.","Correta. Primeiro passo do roteiro.","Faz parte do roteiro, mas depois do beta-HCG."],
+s:["amenS","aula15","sua"]},
+
+{t:"AS",q:"Mulher de 31 anos, com curetagem por aborto infectado há 1 ano. Desde então, o sangramento 'gotejou por alguns meses e depois parou de vez'. Beta-HCG negativo; TSH e prolactina normais. Teste da progesterona negativo; teste com estrogênio + progesterona também negativo. Qual o diagnóstico e o exame que diagnostica e trata?",
+o:["Insuficiência ovariana primária; dosagem de FSH","Síndrome de Asherman; histeroscopia com lise de aderências","Anovulação crônica; ACO","Hipoestrogenismo central; RNM de sela túrcica"],a:1,
+e:"História de curetagem de aborto infectado (maior causa) + sangramento que goteja e para + ausência de resposta endometrial mesmo ao estímulo com E+P = causa canalicular: Síndrome de Asherman. Diagnóstico e tratamento por histeroscopia com lise das aderências.",
+c:["Na IOP o teste E+P seria positivo (o endométrio responde ao hormônio exógeno); FSH só é dosado quando E+P é positivo.","Correta.","Anovulação daria teste da progesterona positivo.","Hipoestrogenismo central também teria E+P positivo."],
+s:["aula15","amenS","amenA"]},
+
+{t:"AS",q:"Mulher de 36 anos com amenorreia há 6 meses, fogachos e ressecamento vaginal. Beta-HCG negativo; TSH e prolactina normais. FSH de 48 e 52 UI/mL em duas dosagens com 5 semanas de intervalo. Ela está assintomática para dor e pergunta se precisa tratar. Assinale a conduta correta:",
+o:["Não tratar, pois é climatério normal para a idade","Terapia de reposição hormonal mesmo na ausência de sintomas, salvo contraindicações; se desejar gestação, FIV com ovodoação","Cabergolina para restabelecer a ovulação","Metformina e mudança de hábitos"],a:1,
+e:"Perda da função ovariana antes dos 40 anos com FSH > 25 UI/mL em 2 dosagens com intervalo ≥ 4 semanas = insuficiência ovariana primária. Pelo risco cardiovascular e de osteoporose do hipoestrogenismo, indica-se TRH mesmo sem sintomas; desejo gestacional → FIV com ovodoação.",
+c:["O climatério é definido a partir dos 40 anos; aos 36 trata-se de IOP.","Correta.","Prolactina normal; agonista dopaminérgico não tem indicação.","É conduta da SOMP, não da falência ovariana."],
+s:["amenA","amenS"]},
+
+{t:"AS",q:"Corredora de 22 anos, IMC baixo, treina duas vezes ao dia e está em amenorreia há 8 meses. Beta-HCG negativo, TSH e prolactina normais, estradiol baixo, FSH baixo. Qual o diagnóstico e o tratamento?",
+o:["Insuficiência ovariana primária; TRH isolada","Amenorreia hipotalâmica funcional; ajuste de dieta e da intensidade dos treinos, com TRH adjuvante para prevenir osteoporose","SOMP; ACO combinado","Hiperprolactinemia; cabergolina"],a:1,
+e:"FSH baixo com estradiol baixo e TSH/PRL normais indica defeito central, na pulsatilidade do GnRH. No contexto de exercício extremo e baixo peso, é a amenorreia hipotalâmica funcional (tríade da mulher atleta). Trata-se ajustando dieta e treino; TRH adjuvante para proteger o osso.",
+c:["Na IOP o FSH seria alto.","Correta.","Não há hiperandrogenismo, e o perfil é central.","Prolactina normal."],
+s:["amenA","amenS","aula15"]},
+
+{t:"AS",q:"Mulher de 28 anos com amenorreia há 6 meses, ganho de peso, cansaço e discreta galactorreia. Beta-HCG negativo. Prolactina 45 ng/mL; TSH elevado. Qual a conduta mais adequada?",
+o:["Ressonância de sela túrcica e cabergolina","Tratar o hipotireoidismo; corrigida a causa de base, a prolactina tende a normalizar","ACO para evitar hipoestrogenismo, sem investigar mais","Cirurgia hipofisária"],a:1,
+e:"TSH e prolactina são regulados em nível hipotalâmico pela dopamina; no hipotireoidismo o aumento do TRH reduz o efeito supressor dopaminérgico, gerando hiperprolactinemia secundária. Corrigindo a causa de base (reposição de levotiroxina), a prolactina normaliza.",
+c:["Prolactina < 100 com causa evidente; imagem e agonista dopaminérgico não são o primeiro passo.","Correta.","Ignora a causa tratável.","Não há tumor demonstrado; cirurgia não tem indicação."],
+s:["aula15","amenS","amenA"]},
+
+{t:"AS",q:"Mulher de 25 anos chega à UPA dizendo estar grávida de 7 meses, 'passando mal e com sangramento'. Diz que não fez pré-natal porque 'o bebê pediu que ninguém soubesse'. Ao exame, o útero não é palpável aumentado; o abdome está hipertimpânico, com defesa. O beta-HCG vem negativo. Qual a conduta adequada?",
+o:["Comunicar diretamente que ela não está grávida e dar alta com orientações","Explicar que o quadro é imaginário para que ela aceite a realidade","Não confrontar a paciente e acionar a psiquiatria, com internação para manejo adequado","Solicitar ultrassonografia obstétrica e manter observação ambulatorial"],a:2,
+e:"É um quadro de pseudociese, distúrbio psiquiátrico grave: a paciente cria justificativas delirantes, e o abdome distende por gases, com útero pequeno. O professor enfatizou não confrontá-la nem dizer diretamente 'você não está grávida' (risco de autoextermínio); com o beta-HCG negativo, chama-se a psiquiatria e ela deve ser internada.",
+c:["O confronto direto pode levar à negação ou ao autoextermínio.","Dizer que é imaginário ou chamá-la de 'maluca' é exatamente o que o professor contraindicou.","Correta.","Retarda o manejo psiquiátrico necessário; a paciente precisa de internação."],
+s:["aula15"]},
+
+{t:"AS",q:"Mulher de 26 anos, com amenorreia há 7 meses, hirsutismo e oligomenorreia prévia. Beta-HCG negativo, TSH e prolactina normais. No teste da progesterona, ela apresenta sangramento. Qual a interpretação, segundo o fluxograma da apostila?",
+o:["Causa canalicular, como Asherman","Eixo funcionante com endométrio estrogenizado: anovulação crônica (ex.: SOMP)","Insuficiência ovariana primária","Hipoestrogenismo central grave"],a:1,
+e:"Sangrar após progesterona significa que havia estrogênio suficiente para proliferar o endométrio e que o canal é pérvio: falta apenas a ovulação (e a progesterona dela). Com hirsutismo, a hipótese é SOMP.",
+c:["Na causa canalicular não haveria sangramento nem com E+P.","Correta.","Na IOP o estrogênio é baixo e o teste da progesterona seria negativo.","Hipoestrogenismo impediria a resposta à progesterona isolada."],
+s:["amenA"]},
+
+{t:"AS",q:"Ao revisar exames de pacientes com amenorreia secundária, o preceptor aplica o 'macete' ensinado pelo professor. Qual paciente tem causa central?",
+o:["LH e FSH elevados, estradiol baixo","LH e FSH baixos, estradiol baixo","Prolactina normal, teste E+P negativo","FSH de 60 UI/mL em duas dosagens"],a:1,
+e:"LH e FSH baixos = causa central (hipotálamo/hipófise). LH e FSH altos = causa periférica (ovariana).",
+c:["Gonadotrofinas altas indicam causa ovariana.","Correta.","Teste E+P negativo sugere causa canalicular.","FSH alto é padrão de insuficiência ovariana."],
+s:["aula15","amenA"]},
+
+/* ================= HIPERPROLACTINEMIA ================= */
+{t:"HP",q:"Mulher de 26 anos com esquizofrenia, estável com antipsicótico em dose alta, apresenta amenorreia, galactorreia, ressecamento vaginal e queda da libido. Beta-HCG negativo, TSH normal, prolactina 85 ng/mL. O psiquiatra responde por carta que não pode suspender nem trocar a medicação. Qual a conduta do ginecologista?",
+o:["Suspender o antipsicótico para normalizar a prolactina","Iniciar cabergolina em dose alta para resposta rápida","Tratar as sequelas da hiperprolactinemia com estrogênio/anticoncepcional","Indicar cirurgia hipofisária"],a:2,
+e:"Prolactina < 100 com antipsicótico sugere causa medicamentosa. Antipsicóticos, antidepressivos e anticonvulsivantes não podem ser suspensos pelo ginecologista. Se o psiquiatra não pode trocar, tratam-se as sequelas: estrogênio/ACO para ressecamento vaginal e libido, prevenção de osteoporose e restabelecimento da SHBG.",
+c:["O ginecologista não pode suspender essas drogas por conta própria.","Dose alta de agonista dopaminérgico pode desencadear distúrbios psiquiátricos graves, especialmente em paciente psicótica.","Correta.","Não há tumor; nível compatível com causa medicamentosa."],
+s:["aula15","amenS"]},
+
+{t:"HP",q:"Mulher de 30 anos, ciclos regulares, sem galactorreia, fez check-up. Prolactina 32 ng/mL. A coleta foi às 16h, logo após a academia; ela conta que dormiu mal na noite anterior. Qual a conduta mais adequada?",
+o:["Iniciar cabergolina","Solicitar ressonância de sela túrcica","Repetir a dosagem pela manhã, com noite de sono adequada, sem exercício ou relação sexual na véspera, sem estímulo mamilar e após 20 minutos de repouso","Considerar hiperprolactinemia confirmada e investigar medicamentos"],a:2,
+e:"A prolactina aumenta com o sono (ritmo circadiano), exercício e outros estímulos; a coleta deve ser pela manhã com preparo adequado. Noite mal dormida pode dar resultado falso-alterado. Valor pouco acima do normal (até 20 ng/mL), sem clínica e com coleta inadequada, deve ser repetido.",
+c:["Não há hiperprolactinemia confirmada.","Não há indicação de imagem com valor discreto e coleta inadequada.","Correta.","O resultado não é confiável; primeiro é preciso repetir corretamente."],
+s:["aula15","amenS"]},
+
+{t:"HP",q:"Mulher de 34 anos com amenorreia, galactorreia e queixa de 'esbarrar nas coisas pelos lados'. Não usa medicações. Prolactina 680 ng/mL (colhida corretamente). Qual a sequência de conduta mais adequada?",
+o:["Cirurgia de urgência como primeira linha","Ressonância de sela túrcica e agonista dopaminérgico em doses crescentes gradativas, reservando cirurgia para falha clínica","Repetir prolactina em 1 ano","ACO isolado para evitar hipoestrogenismo"],a:1,
+e:"Prolactina > 500 sugere macroprolactinoma, com indicação direta de RNM (ou TC) de sela. A perda de campo lateral sugere compressão do quiasma óptico (hemianopsia bitemporal). O tratamento medicamentoso é primeira linha, com titulação lenta; a cirurgia fica para falha (cerca de 10%).",
+c:["Mesmo no macroprolactinoma a cirurgia não é primeira linha.","Correta.","Há compressão visual; observar seria inadequado.","ACO isolado é conduta da causa medicamentosa que não pode ser suspensa, não de tumor."],
+s:["amenS","aula15"]},
+
+{t:"HP",q:"Mulher de 29 anos com amenorreia e galactorreia, sem uso de medicações, TSH normal. Prolactina 240 ng/mL; queixa de cefaleia, sem alteração visual. Conforme o material, qual a conduta?",
+o:["Nenhuma imagem, pois o nível está abaixo de 500","Ressonância (ou TC) de sela túrcica, pois há nível intermediário com queixa clínica","Suspender medicações inexistentes","Diagnosticar microprolactinoma sem investigação"],a:1,
+e:"Abaixo de 100: micro ou medicamentoso; acima de 500: macro com RNM direta; níveis intermediários com queixas clínicas: RNM ou TC. O professor acrescentou que, no consultório, acima de 100 pede ressonância para todas.",
+c:["Níveis intermediários com queixas clínicas também indicam imagem.","Correta.","Sem medicações, é preciso investigar causa tumoral.","Não se define o tamanho do tumor sem imagem."],
+s:["amenS","aula15"]},
+
+{t:"HP",q:"Paciente com microprolactinoma iniciou cabergolina já em dose de 1 mg três vezes por semana, para 'resolver rápido'. Duas semanas depois, apresenta agitação e sintomas psicóticos. Qual foi o erro?",
+o:["Uso de cabergolina em vez de bromocriptina","Introdução em dose alta; o aumento deve ser gradual, semanal ou quinzenal, pois a elevação brusca pode desencadear distúrbios psiquiátricos graves","Coleta de prolactina sem jejum","Falta de associação com metformina"],a:1,
+e:"O professor enfatizou: nunca começar em dose alta. A dose sobe degrau por degrau (semanal ou a cada 15 dias); o aumento brusco pode causar distúrbios psiquiátricos graves por supersensibilidade dopaminérgica. A dose inicial nos slides é 0,25 mg 2x/semana.",
+c:["A cabergolina é inclusive preferida (mais eficaz e com menos efeitos colaterais).","Correta.","Não tem relação com o quadro.","Metformina não faz parte do tratamento da hiperprolactinemia."],
+s:["aula15","amenS"]},
+
+{t:"HP",q:"Mulher de 32 anos em uso de cabergolina há 1 ano, com prolactina normalizada, deseja parar o remédio. Qual orientação está correta?",
+o:["Pode suspender de uma vez, pois a cura é definitiva","Fazer retirada progressiva, inversa à introdução, sabendo que a recorrência pode chegar a 69%","Deve manter o uso por toda a vida","Deve trocar por bromocriptina antes de suspender"],a:1,
+e:"A terapia pode ser parada após 1 ano de normalização, com retirada progressiva (desmame inverso à introdução). O risco de recorrência pode chegar a 69%, o que exige seguimento.",
+c:["A retirada deve ser progressiva, e a recorrência é frequente.","Correta.","Após 1 ano normalizada, a retirada é prevista.","Não há indicação para essa troca."],
+s:["aula15","amenS"]},
+
+{t:"HP",q:"Paciente em uso prolongado de cabergolina, 3 mg por semana, para macroprolactinoma. Qual cuidado de seguimento é recomendado?",
+o:["Densitometria semestral","Ecocardiograma bianual pelo risco de doença valvar","Ressonância de mamas anual","Nenhum cuidado adicional"],a:1,
+e:"A cabergolina tem menos efeitos colaterais, mas o uso prolongado acima de 2 mg/semana associa-se a doença valvar, com recomendação de ecocardiograma bianual.",
+c:["Não consta como seguimento específico da cabergolina.","Correta.","Não consta no material.","A dose acima de 2 mg/semana exige vigilância cardíaca."],
+s:["amenS"]},
+
+{t:"HP",q:"Mulher de 24 anos foi diagnosticada com 'SOP' pelo dermatologista por acne e hirsutismo. Refere ciclos muito espaçados e, ao exame, há galactorreia à expressão. Qual mecanismo explica o hiperandrogenismo, caso se confirme hiperprolactinemia?",
+o:["A prolactina estimula diretamente os folículos pilosos","A prolactina inibe o GnRH, o estrogênio cai, o fígado reduz a SHBG e aumenta a fração livre (ativa) dos androgênios","A prolactina converte estradiol em testosterona no ovário","A progesterona elevada causa acne"],a:1,
+e:"Prolactina alta → inibição do GnRH → ↓ LH/FSH → hipoestrogenismo. Com menos estrogênio, o fígado produz menos SHBG; a fração livre dos androgênios, que é a ativa, aumenta, gerando acne e hirsutismo. O professor alertou que vários casos rotulados como SOP são hiperprolactinemia não diagnosticada.",
+c:["Não é o mecanismo descrito.","Correta.","Não é o mecanismo descrito.","A hiperprolactinemia cursa com anovulação, e não com excesso de progesterona."],
+s:["aula15","amenS","hpA"]},
+
+{t:"HP",q:"Mulher de 27 anos com piercing em ambos os mamilos há 4 meses refere saída de secreção leitosa. Ciclos regulares. Prolactina 38 ng/mL. Sem uso de medicações; TSH normal. Qual a interpretação mais provável?",
+o:["Macroprolactinoma","Elevação relacionada ao estímulo mamilar mantido, que é causa fisiológica de aumento da prolactina","Hipotireoidismo subclínico","Insuficiência ovariana"],a:1,
+e:"O professor citou o piercing de mamilo e a manipulação mamilar frequente como causas de hiperprolactinemia, pois a produção está fisiologicamente associada ao estímulo do mamilo. Os slides listam o estímulo mamilar mantido entre as alterações fisiológicas.",
+c:["O nível é discreto; macroprolactinoma sugere valores acima de 500.","Correta.","TSH normal.","Ciclos regulares; sem dados de falência ovariana."],
+s:["aula15","amenS"]},
+
+{t:"HP",q:"Paciente vai ao mastologista por descarga láctea. Na anamnese, a saída de leite ocorre nas duas mamas e por múltiplos ductos. Qual a conduta coerente com o que foi ensinado?",
+o:["Biópsia mamária, pois é padrão tumoral","Encaminhar para investigação endócrina/ginecológica, pois o padrão bilateral e multiductal está fora do padrão tumoral mamário","Tranquilizar e dar alta","Antibioticoterapia"],a:1,
+e:"Galactorreia bilateral e multiductal está fora do padrão tumoral mamário e sugere causa endócrina (hiperprolactinemia); a paciente deve ser encaminhada à endocrinologia/ginecologia.",
+c:["O padrão não é tumoral.","Correta.","A galactorreia merece investigação.","Não há sinais infecciosos."],
+s:["aula15"]},
+
+{t:"HP",q:"Na UBS, só há bromocriptina disponível para uma paciente com microprolactinoma. Após iniciar o tratamento, ela relata náuseas, tontura ao levantar e congestão nasal. Qual a interpretação?",
+o:["Sinal de falha terapêutica que indica cirurgia","Efeitos colaterais esperados da bromocriptina, mais frequentes que com a cabergolina","Sinais de doença valvar","Sinais de macroprolactinoma"],a:1,
+e:"Bromocriptina: náuseas, vômitos, tonturas, hipotensão postural, congestão nasal, Raynaud, depressão e reação psicótica. A cabergolina tem menor frequência de efeitos colaterais, mas nem sempre está disponível no SUS.",
+c:["Efeito colateral não é falha terapêutica.","Correta.","Doença valvar é relacionada à cabergolina em uso prolongado acima de 2 mg/semana.","Não há relação."],
+s:["amenS","aula15"]},
+
+/* ================= SOMP ================= */
+{t:"SO",q:"Mulher de 24 anos com oligomenorreia há 3 anos, hirsutismo em face e abdome e IMC 31. Ultrassonografia: ovários sem microcistos. Sobre o diagnóstico, assinale a correta:",
+o:["SOMP está descartada pela ausência de microcistos","Pode preencher 2 dos 3 critérios de Rotterdam (fenótipo B), mas antes é preciso excluir outras causas de hiperandrogenismo, como a hiperprolactinemia","A obesidade é critério obrigatório e confirma o diagnóstico","Trata-se do fenótipo D"],a:1,
+e:"Rotterdam exige 2 de 3 critérios; anovulação + hiperandrogenismo sem microcistos é o fenótipo B (A ou B somam 80%). O ponto crítico é excluir outras causas de hiperandrogenismo. Obesidade não é critério.",
+c:["Microcistos não são obrigatórios.","Correta.","Obesidade, resistência à insulina e infertilidade não fazem parte dos critérios.","O fenótipo D não tem hiperandrogenismo."],
+s:["amenS","aula15"]},
+
+{t:"SO",q:"Adolescente de 16 anos, menarca aos 12, ciclos irregulares, algumas espinhas e poucos pelos no queixo. A mãe traz um ultrassom com 'microcistos' e pede tratamento para SOP. Qual a conduta?",
+o:["Confirmar SOMP pelos critérios de Rotterdam","Não aplicar Rotterdam nem valorizar o ultrassom; sem hiperandrogenismo grave, classificá-la como 'sob risco', pois tem menos de 8 anos pós-menarca","Iniciar metformina","Pedir ressonância pélvica"],a:1,
+e:"Na adolescência não se usam os critérios de Rotterdam e o US não deve ser pedido ('microcisto em adolescente, você nem olha'). O diagnóstico exige transtorno menstrual severo com hiperandrogenismo grave ('não estamos falando de 3 espinhas e 1 pelinho'). Com menos de 8 anos pós-menarca e sem critérios claros: 'sob risco'. A maioria desses casos é imaturidade do eixo.",
+c:["Rotterdam não se aplica a adolescentes.","Correta.","Não há diagnóstico estabelecido.","Imagem não faz parte da avaliação nessa faixa."],
+s:["hpA","amenS"]},
+
+{t:"SO",q:"Mulher de 29 anos com diagnóstico prévio de SOP evolui em poucos meses com aumento do clitóris e engrossamento da voz. Qual o raciocínio correto?",
+o:["É evolução esperada da SOMP; manter ACO","Sinais de virilização exigem pensar em tumores ou uso exógeno de androgênios","Indica hiperprolactinemia","Indica insuficiência ovariana"],a:1,
+e:"Clitoromegalia e alteração da voz são sinais de virilização; o material orienta pensar em tumores ou uso exógeno, e não em SOMP simples.",
+c:["Virilização não faz parte do quadro habitual.","Correta.","Não é o raciocínio indicado.","Não é o raciocínio indicado."],
+s:["amenS","amenA"]},
+
+{t:"SO",q:"Mulher de 27 anos com SOMP, IMC 34, com contraindicação formal ao uso de estrogênios registrada pela equipe. Qual esquema está previsto no material?",
+o:["ACO combinado","Progestagênico puro como tratamento suficiente do hiperandrogenismo","Metformina de liberação lenta (1 a 2 g/dia) associada a ciproterona (12,5 a 50 mg/dia por 21 dias/mês)","Cabergolina"],a:2,
+e:"Em pacientes com contraindicação aos estrogênios, usa-se metformina associada a ciproterona ou a outros antiandrogênicos. A metformina é especialmente indicada com sobrepeso/obesidade ou síndrome metabólica.",
+c:["Contraindicado pelo estrogênio.","O progestagênico puro protege o endométrio, mas sem evidência sólida para o hiperandrogenismo.","Correta.","Não há hiperprolactinemia."],
+s:["amenS"]},
+
+{t:"SO",q:"Paciente com SOMP em uso de ACO combinado há 1 ano, com mudança de hábitos, mantém hirsutismo. A equipe quer associar um antiandrogênio priorizando menor risco clínico, aceitando menor potência. Qual a escolha?",
+o:["Ciproterona","Drospirenona","Bromocriptina","Suspender o ACO"],a:1,
+e:"Antiandrogênios entram se não houver resposta ao tratamento convencional: ciproterona tem maior potência; drospirenona tem menor potência, mas menores riscos clínicos.",
+c:["Tem maior potência, mas não é a opção de menor risco.","Correta.","Não é antiandrogênio.","O ACO é a base do tratamento (nível A)."],
+s:["amenS","amenA"]},
+
+{t:"SO",q:"Durante uma aula, um aluno pergunta por que a antiga SOP passou a se chamar Síndrome Ovariana Metabólica Poliendócrina. Qual a resposta coerente com o Consenso 2026?",
+o:["Porque os microcistos passaram a ser obrigatórios","Porque o foco sai da morfologia ovariana e passa para o quadro metabólico sistêmico","Porque a doença deixou de estar ligada a androgênios","Porque os critérios de Rotterdam foram abolidos"],a:1,
+e:"Sai o enfoque morfológico ovariano e entra o aspecto mais sério: o quadro metabólico sistêmico (DM2, resistência à insulina, dislipidemia, esteatose, síndrome metabólica, tromboembolismo, doença cardiovascular). Os critérios de Rotterdam continuam sendo usados.",
+c:["Não é obrigatório.","Correta.","O hiperandrogenismo segue central no diagnóstico.","Os critérios continuam os mesmos."],
+s:["amenS","amenA","aula15"]},
+
+/* ================= DISMENORREIA ================= */
+{t:"DM",q:"Adolescente de 16 anos, menarca aos 13, cólica menstrual desde os 14 anos, que começa algumas horas antes do sangramento e dura até 2 dias, com náuseas e diarreia. Exame clínico sem alterações. Qual a conduta mais adequada?",
+o:["Ultrassonografia transvaginal e CA-125 antes de qualquer tratamento","Diagnóstico clínico de dismenorreia primária; tratamento com AINH e/ou ACO, reservando exames para casos refratários","Laparoscopia diagnóstica","Antiespasmódico e vitaminas"],a:1,
+e:"Início 12 a 24 meses após a menarca (ciclos ovulatórios), dor que começa antes ou junto ao sangramento, sintomas associados por prostaglandinas e exame normal = dismenorreia primária. O diagnóstico é clínico; exames complementares são indicados em casos severos refratários ao teste terapêutico.",
+c:["Exames só se persistir dúvida ou houver refratariedade.","Correta.","Invasivo e sem indicação.","Classificados no material como ineficazes."],
+s:["dismS","pub"]},
+
+{t:"DM",q:"Mulher de 33 anos, que nunca teve cólicas, passou a ter dor menstrual há 2 anos, cada vez mais forte, localizada à direita, e dor na relação sexual. No toque, há dor intensa à palpação do ligamento útero-sacro. Qual a principal hipótese e o exame complementar mais útil inicialmente?",
+o:["Dismenorreia primária; nenhum exame","Endometriose; ultrassonografia pélvica transvaginal","Estenose de colo; histeroscopia","Síndrome da congestão pélvica; tomografia"],a:1,
+e:"Início após os 25 anos, progressão, dor lateralizada e dispareunia são indicativos de dismenorreia secundária, cuja causa mais frequente é a endometriose. A dor ao toque do útero-sacro reforça. O exame complementar mais útil inicialmente é a US transvaginal.",
+c:["Vários sinais de alerta de causa secundária.","Correta.","A estenose de colo é pouco significativa e não explica o quadro.","Não é a hipótese mais provável nem o exame inicial."],
+s:["dismS","pub"]},
+
+{t:"DM",q:"Jovem de 19 anos com dismenorreia intensa, sem melhora após uso adequado de ACO associado a AINH. Qual o próximo passo?",
+o:["Neurectomia pré-sacral","Investigar fatores secundários","Acupuntura","Histerectomia"],a:1,
+e:"Nos casos refratários à combinação ACO + AINH, investigam-se fatores secundários. Neurectomia pré-sacral e secção do útero-sacro foram abandonadas; a histerectomia aparece apenas como questionamento para casos muito graves.",
+c:["Abandonada.","Correta.","Classificada como sem eficácia além do placebo.","Não é o próximo passo."],
+s:["dismS"]},
+
+{t:"DM",q:"Mulher de 27 anos, tentando engravidar, tem dismenorreia primária e pergunta qual anti-inflamatório usar. Com base no material, qual a orientação?",
+o:["Preferir inibidor seletivo de COX-2, por ser mais eficaz","Preferir AINH com ação sobre COX-1, pela possível ação da COX-2 no bloqueio da ovulação","Usar ACO, pois não interfere na gestação","AINH é contraindicado na dismenorreia"],a:1,
+e:"Os slides indicam preferência pela COX-1 sobre a COX-2 pela possível ação da COX-2 bloqueando a ovulação (evidência A para AINH). A eficácia na dose padrão é semelhante entre AINH, então o critério aqui é o desejo reprodutivo.",
+c:["A eficácia é semelhante na dose padrão; não é mais eficaz.","Correta.","O ACO não é compatível com quem deseja engravidar.","O AINH é tratamento com evidência A."],
+s:["dismS"]},
+
+{t:"DM",q:"Paciente com dismenorreia primária pergunta por que sente náuseas e diarreia junto com a cólica. Qual a explicação fisiopatológica?",
+o:["A contração uterina espasmódica irrita o intestino","Metabólitos das prostaglandinas atuam na origem de náuseas, vômitos e diarreia","A estenose do colo causa refluxo","É sempre de origem psicogênica"],a:1,
+e:"As prostaglandinas (com elevação de PGF2-alfa) aumentam o cálcio no miométrio, causam contração tônica (não espasmódica), vasoconstrição e isquemia transitória; seus metabólitos originam náusea, vômitos e diarreia.",
+c:["A contração é tônica, e não espasmódica.","Correta.","A estenose de colo é pouco significativa.","A teoria psicogênica é importante apenas em alguns casos, geralmente secundários."],
+s:["dismS"]},
+
+{t:"DM",q:"Mulher de 30 anos, sem cólicas prévias, passou a ter dismenorreia progressiva poucos meses após inserção de DIU não hormonal. Como classificar o quadro?",
+o:["Dismenorreia primária","Dismenorreia secundária, sendo o DIU uma das causas listadas","Dismenorreia psicogênica","Normal, sem necessidade de avaliação"],a:1,
+e:"Dor de aparecimento tardio após anos de ciclos normais ou de caráter crescente é dismenorreia secundária; o DIU está entre as causas listadas nos slides. Note que o DIU de progesterona, ao contrário, é opção de tratamento.",
+c:["A primária surge após a menarca.","Correta.","Não é a explicação mais provável.","Há causa secundária identificável."],
+s:["dismS"]},
+
+{t:"DM",q:"Paciente com dismenorreia primária pergunta sobre acupuntura, homeopatia e florais. Segundo os slides, qual a resposta?",
+o:["São primeira linha, com evidência A","São absolutamente ineficazes, com efeito puramente placebo","Equivalem ao ACO","São indicados quando há desejo de gestação"],a:1,
+e:"Os slides classificam acupuntura, homeopatia, florais, fitoterapia e terapias alternativas, além de antiespasmódicos, vitaminas e ácido gamalinolênico, como ineficazes, com efeito placebo. As terapias específicas são ACO (eficácia de 90%), AINH (evidência A) e DIU de progesterona.",
+c:["Evidência A é do AINH.","Correta.","O ACO tem eficácia de 90%.","Não há essa indicação."],
+s:["dismS"]},
+
+/* ================= SUA ================= */
+{t:"SU",q:"Mulher de 25 anos chega ao pronto atendimento com sangramento vaginal intenso, pálida e com coágulos. Qual a sequência inicial correta de raciocínio?",
+o:["Classificar pelo PALM-COEIN antes de estabilizar","Afastar gestação com beta-HCG e, na fase aguda, estabilizar e parar o sangramento; depois consolidar e prevenir recidivas","Iniciar tratamento de manutenção a longo prazo","Solicitar apenas ultrassonografia e liberar"],a:1,
+e:"Em mulher em idade fértil com sangramento, o primeiro diagnóstico a afastar é gestação (beta-HCG). O manejo tem fases: aguda (estabilização hemodinâmica e controle do sangramento), consolidação (regular o ciclo) e manutenção (prevenir recidivas).",
+c:["A estabilização vem antes.","Correta.","Fase 3 vem depois.","Ignora a gestação e a estabilização."],
+s:["sua"]},
+
+{t:"SU",q:"Mulher de 32 anos, obesa, com ciclos irregulares e sangramentos prolongados de 10 a 15 dias. Beta-HCG negativo; ultrassonografia com útero sem lesões estruturais. Segundo o PALM-COEIN e as anotações, como classificar e qual o risco a longo prazo?",
+o:["PALM – leiomioma; risco de torção","COEIN – 'O' (disfunção ovulatória); estímulo estrogênico sem oposição de progesterona pode levar a hiperplasia, precursora de câncer de endométrio","COEIN – 'C'; risco de trombose","PALM – pólipo; nenhum risco"],a:1,
+e:"Sem lesão estrutural, com ciclos irregulares: causa não estrutural por anovulação ('O'), a forma clássica do SUA funcional. A anovulação mantém estímulo estrogênico sem progesterona, levando a hiperplasia endometrial, precursora de carcinoma; a obesidade aumenta a aromatização periférica.",
+c:["Não há lesão estrutural.","Correta.","Não há dados de coagulopatia.","Não há lesão estrutural."],
+s:["sua","cicA"]},
+
+{t:"SU",q:"Mulher de 40 anos com sangramento aumentado; a ultrassonografia mostra espessamento difuso do miométrio compatível com adenomiose, e ela também tem distúrbio de coagulação conhecido. Na classificação PALM-COEIN, quais componentes estão presentes?",
+o:["Apenas PALM – 'A'","'A' do PALM (estrutural) e 'C' do COEIN (não estrutural)","'M' do PALM e 'O' do COEIN","Apenas COEIN – 'E'"],a:1,
+e:"PALM (estruturais): pólipo, adenomiose, leiomioma, malignidade/hiperplasia. COEIN (não estruturais): coagulopatia, ovulação, endométrio, iatrogênico, não especificado. A classificação permite mais de um componente na mesma paciente.",
+c:["Ignora a coagulopatia.","Correta.","Não há malignidade nem disfunção ovulatória descritas.","Não contempla os dados do caso."],
+s:["sua"]},
+
+{t:"SU",q:"Mulher de 35 anos relata sangrar 'um pacote de absorvente noturno por dia'. Está corada, em bom estado geral, sem sangramento ativo ao exame, e a hemoglobina é 13,6 g/dL. O plantonista quer encaminhá-la direto ao psiquiatra. Qual o princípio correto?",
+o:["A hemoglobina normal confirma transtorno psicogênico","Transtorno psicogênico é diagnóstico de exclusão: é preciso afastar antes causas estruturais, hormonais e coagulopatias","Coágulos não têm valor semiológico","O volume em mL relatado pela paciente é o critério principal"],a:1,
+e:"A hemoglobina é o parâmetro objetivo central e, normal, não corrobora sangramento volumoso; os coágulos são sinal real de sangramento aumentado. Mas o diagnóstico psicogênico só vem após afastar causas orgânicas ('se mandar direto pro psiquiatra e ela tiver mioma, se lascou').",
+c:["Hb normal não confirma causa psicogênica.","Correta.","Coágulos são sinal semiológico real.","A paciente não sabe relatar volume em mL; o volume é definido pelo impacto na qualidade de vida."],
+s:["cicA"]},
+
+/* ================= CICLO MENSTRUAL ================= */
+{t:"CM",q:"Na anamnese, a paciente diz: 'minha última menstruação começou dia 5 e terminou dia 10'. Hoje é dia 20 do mesmo mês. Em que dia do ciclo ela está?",
+o:["Dia 10","Dia 11","Dia 16","Dia 20"],a:2,
+e:"Por convenção, o dia 1 do ciclo é o primeiro dia de sangramento (dia 5). Do dia 5 ao dia 20 são 16 dias contando o dia 5. Por isso a pergunta correta é 'quando foi o primeiro dia da última menstruação'; usar a data de término (dia 10) levaria ao erro.",
+c:["Resultado de contar a partir do término.","Também parte da data de término (erro comum da pergunta ambígua).","Correta.","Confunde a data do mês com o dia do ciclo."],
+s:["cicA","cicS"]},
+
+{t:"CM",q:"Mulher de 38 anos com endometriose inicia goserrelina (análogo de GnRH) em uso contínuo e evolui com amenorreia. Qual o mecanismo?",
+o:["O GnRH contínuo aumenta LH e FSH e esgota o ovário","Níveis contínuos, sem pulsatilidade, saturam os receptores hipofisários e inibem LH e FSH, gerando hipogonadismo hipogonadotrófico reversível","A goserrelina destrói o endométrio","A goserrelina eleva a prolactina"],a:1,
+e:"A secreção de LH e FSH depende da pulsatilidade do GnRH; níveis contínuos inibem LH e FSH ('menopausa clínica'), princípio usado em mioma, endometriose, adenomiose e puberdade precoce.",
+c:["É o oposto.","Correta.","Não é o mecanismo.","Não é o mecanismo."],
+s:["cicS","cicA"]},
+
+{t:"CM",q:"Em um experimento hipotético, as células da granulosa de um folículo perdem os receptores de FSH, mantendo teca e LH normais. Com base na teoria das duas células, o que se espera?",
+o:["Aumento da produção de estradiol","Redução da conversão de androgênios em estradiol, com acúmulo de androgênios da teca","Ausência de produção de androgênios","Aumento imediato da progesterona"],a:1,
+e:"A teca, sob LH, produz androgênios a partir do colesterol; a granulosa, sob FSH, usa a aromatase para converter esses androgênios em estradiol. Sem a ação do FSH na granulosa, a aromatização falha e os androgênios não são convertidos.",
+c:["O estradiol depende da granulosa estimulada pelo FSH.","Correta.","A teca continua produzindo androgênios pelo LH.","Não há base para isso."],
+s:["cicA","cicS"]},
+
+{t:"CM",q:"Em um ciclo de 28 dias, a elevação de LH é detectada na manhã do dia 13. Segundo os slides, quando se espera a ovulação?",
+o:["No mesmo dia 13, pela manhã","Cerca de 36 horas depois, ou seja, no fim do dia 14","No dia 20","No dia 28"],a:1,
+e:"A pequena liberação de progesterona pré-ovulatória ativa rápida liberação de LH, que promove a ovulação cerca de 36 horas após; o LH induz enzimas que destroem a parede folicular e a contração das células musculares perifoliculares.",
+c:["Ignora o intervalo de ~36 h.","Correta.","Não há base para isso.","Corresponde ao fim do ciclo."],
+s:["cicS","cicA"]},
+
+{t:"CM",q:"Após a fecundação, qual é o papel do beta-hCG em relação ao corpo lúteo?",
+o:["Inibe o corpo lúteo para evitar nova ovulação","Mantém o corpo lúteo funcionante até a transição luteoplacentária, por volta de 8 a 10 semanas","Substitui o estradiol no endométrio","Estimula a secreção de FSH"],a:1,
+e:"O sinciciotrofoblasto produz beta-hCG, que mantém o corpo lúteo (e a progesterona, essencial à nidação e à manutenção da gestação) até a transição luteoplacentária (~8–10 semanas). Sem fecundação, há regressão, queda hormonal e menstruação.",
+c:["É o oposto.","Correta.","Não é o papel descrito.","Não é o papel descrito."],
+s:["cicA","cicS"]},
+
+/* ================= ANATOMIA ================= */
+{t:"AN",q:"Durante o exame especular, a paciente em posição de exame pélvico queixa-se de dor e pressão na região da bexiga, e o colo não é visualizado. O espéculo foi introduzido perpendicular ao leito. Qual a correção?",
+o:["Introduzir o espéculo em cerca de 45° em relação ao eixo do corpo, seguindo a direção da vagina","Aumentar a abertura do espéculo","Introduzir mais anteriormente","Colocar a paciente em pé"],a:0,
+e:"Deitada, a vagina forma cerca de 45° em relação ao eixo do corpo; respeitar essa linha de introdução evita o contato com a parede anterior (bexiga) e facilita a visualização do colo.",
+c:["Correta.","Não corrige o eixo de introdução.","Aumentaria o contato com a bexiga.","Em pé, a vagina segue direção cranial e posterior; não é a posição de exame."],
+s:["anaS","anaA"]},
+
+{t:"AN",q:"Mulher de 26 anos chega com dor pélvica súbita e intensa à direita. A ultrassonografia sugere interrupção do fluxo ovariano. Qual característica anatômica explica a predisposição a esse evento?",
+o:["O ovário é irrigado pela artéria uterina","O ovário tem dois pontos de fixação: o ligamento útero-ovariano e o pedículo vásculo-nervoso","O ovário não tem drenagem venosa","As fímbrias são fixas ao ovário"],a:1,
+e:"A dupla fixação cria risco de torção: o pedículo gira sobre si e interrompe o fluxo, como uma mangueira dobrada.",
+c:["As artérias ovarianas são ramos diretos da aorta.","Correta.","Há drenagem venosa (direita → cava inferior; esquerda → renal esquerda).","As fímbrias são livres e móveis."],
+s:["anaS","anaA"]},
+
+{t:"AN",q:"Paciente com lesão maligna na vulva. Qual cadeia linfonodal deve ser avaliada prioritariamente, e qual seria diferente em um tumor de ovário?",
+o:["Vulva: para-aórtica; ovário: inguinal","Vulva: predominantemente inguinal; ovário: ilíacas e para-aórticas","Vulva: fossa obturadora; ovário: inguinal","Ambos drenam exclusivamente para a cadeia inguinal"],a:1,
+e:"A drenagem linfática é essencial em oncologia ginecológica: vulva → predominantemente inguinal; vagina → mista; colo → ilíacas interna e comum e fossa obturadora; ovário → ilíacas e para-aórticos.",
+c:["Inverte as cadeias.","Correta.","Fossa obturadora é do colo.","O ovário não drena para a cadeia inguinal."],
+s:["anaS","anaA"]},
+
+{t:"AN",q:"Na coleta de material do colo uterino para rastreamento, qual região deve receber atenção especial e por quê?",
+o:["O fundo de saco posterior, onde surgem os tumores de vagina","A junção escamocolunar, onde surgem cerca de 95% dos cânceres do colo","O canal endocervical alto apenas","A vulva"],a:1,
+e:"A JEC é a transição entre o epitélio escamoso estratificado da ectocérvice e o epitélio colunar glandular do canal endocervical; cerca de 95% dos cânceres do colo surgem nela.",
+c:["Não é a região descrita.","Correta.","A JEC está na transição, não no canal alto.","Não é a região descrita."],
+s:["anaA","anaS"]},
+
+/* ================= DIFERENCIAÇÃO SEXUAL ================= */
+{t:"DS",q:"Duas pacientes têm cariótipo 46,XY e fenótipo feminino. A primeira (Swyer) tem útero; a segunda (insensibilidade androgênica) não tem. Qual a explicação embriológica para essa diferença?",
+o:["A primeira tem receptor androgênico ausente","Na primeira as gônadas são disgenéticas e não produzem hormônio anti-mülleriano, permitindo os ductos de Müller; na segunda o testículo existe e produz HAM, que faz os ductos regredirem","A segunda tem deleção do SRY","A testosterona forma o útero"],a:1,
+e:"O desenvolvimento feminino interno depende da ausência de HAM (testicular). Sem testículo funcionante (Swyer, deleção do SRY), não há HAM e os ductos de Müller formam útero e trompas. Na insensibilidade androgênica, o testículo existe e produz HAM, então não há útero.",
+c:["Receptor ausente é da insensibilidade androgênica (a segunda).","Correta.","A deleção do SRY é da Swyer (a primeira).","A testosterona não forma o útero; o útero vem dos ductos de Müller na ausência de HAM."],
+s:["anaS","anaA","amenS"]},
+
+{t:"DS",q:"Recém-nascido com genitália ambígua em uma maternidade. A família pressiona para fazer logo o registro. Qual a conduta do médico?",
+o:["Registrar pelo aspecto predominante e corrigir depois","Não registrar de imediato; encaminhar a centro especializado para cariótipo, imagem e investigação anatômica","Registrar como masculino","Liberar o registro como 'ignorado' e não investigar"],a:1,
+e:"Há dificuldade legal de reversão do registro e repercussão emocional e social importante. Por isso, investiga-se antes (cariótipo, imagem e avaliação anatômica).",
+c:["A reversão legal é difícil.","Correta.","Sem base.","Mesmo com a opção 'ignorado', a investigação é indispensável."],
+s:["anaA","anaS"]},
+
+{t:"DS",q:"Gestante relata uso de anabolizantes androgênicos no início da gravidez. O feto é 46,XX. Qual o risco discutido em aula?",
+o:["Formação de testículos","Interferência na diferenciação da genitália externa do feto","Regressão dos ovários","Síndrome de Turner"],a:1,
+e:"Foi discutido o efeito de androgênios, anabolizantes e esteroides na gestação, que podem interferir na diferenciação da genitália externa, já que a genitália feminina depende da ausência de testosterona. O sexo gonadal depende do SRY/TDF, e não do hormônio exógeno.",
+c:["A formação testicular depende do SRY/TDF.","Correta.","Não há base para isso.","Turner é alteração cromossômica."],
+s:["anaA","anaS"]},
+
+{t:"DS",q:"Uma paciente de 30 anos pergunta por que a reserva ovariana 'acaba'. Com base na embriologia, qual a explicação?",
+o:["Os folículos são produzidos continuamente até a menopausa","Por volta da 16ª semana de gestação a menina já tem praticamente todos os folículos primordiais que usará na vida, consumidos progressivamente até a menopausa","Os folículos surgem na puberdade","A reserva depende do gene SRY"],a:1,
+e:"Na 5ª semana surgem as cristas gonadais; por volta da 16ª semana já existem os folículos primários. Eles são consumidos ao longo da vida reprodutiva até o esgotamento, culminando na menopausa.",
+c:["Não há produção contínua.","Correta.","Existem desde a vida fetal.","O SRY determina testículo."],
+s:["anaS","anaA"]},
+
+/* ================= PUBERDADE ================= */
+{t:"PB",q:"Mãe traz a filha de 10 anos preocupada porque surgiram pelos pubianos antes do broto mamário. A menina está bem, com crescimento normal. Qual a orientação?",
+o:["É sempre patológico e exige investigação imediata","Em cerca de 20% das meninas a pubarca antecede a telarca; a menarca costuma ocorrer 2 a 3 anos após o início da puberdade, por volta do estágio M3 de Tanner","Indica Síndrome de Turner","Indica que a menarca já ocorrerá no mês seguinte"],a:1,
+e:"A sequência clássica (80%) é telarca → pubarca → estirão → menarca; em 20% a pubarca antecede a telarca. A menarca ocorre 2 a 3 anos após o início da puberdade (média de 12,2 anos no Brasil), por volta de M3.",
+c:["É variação normal descrita no material.","Correta.","Não há base para isso.","A menarca vem 2 a 3 anos após o início da puberdade."],
+s:["amenS","pub"]}
+];
+
+/* ---------- state ---------- */
+const $ = s => document.querySelector(s);
+const state = {sel:new Set(Object.keys(TOPICS)), shuffle:false, list:[], i:0, ans:[], answered:false};
+
+function shuffleArr(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+function renderChips(){
+  const box=$("#topicChips");
+  if(box){box.innerHTML="";}
+  if(box) Object.entries(TOPICS).forEach(([k,v])=>{
+    const n=Q.filter(q=>q.t===k).length;
+    const b=document.createElement("button");
+    b.className="chip"; b.setAttribute("aria-pressed",state.sel.has(k));
+    b.innerHTML=`${v}<span class="n">${n}</span>`;
+    b.onclick=()=>{state.sel.has(k)?state.sel.delete(k):state.sel.add(k);renderChips();};
+    box.appendChild(b);
+  });
+  const total=Q.filter(q=>state.sel.has(q.t)).length;
+  $("#countLabel").textContent= total? `${total} questões` : "Escolha ao menos um tema";
+  $("#startBtn").disabled=!total;
+}
+$("#ordTopic").onclick=()=>{state.shuffle=false;$("#ordTopic").setAttribute("aria-pressed","true");$("#ordShuffle").setAttribute("aria-pressed","false");};
+$("#ordShuffle").onclick=()=>{state.shuffle=true;$("#ordShuffle").setAttribute("aria-pressed","true");$("#ordTopic").setAttribute("aria-pressed","false");};
+
+function prep(q){
+  const idx=shuffleArr(q.o.map((_,i)=>i));
+  return {...q, order:idx};
+}
+function start(list){
+  state.list=list.map(prep); state.i=0; state.ans=[]; 
+  show("quiz"); buildStrip(); renderQ();
+}
+$("#startBtn").onclick=()=>{
+  let l=Q.filter(q=>state.sel.has(q.t));
+  if(state.shuffle) l=shuffleArr(l);
+  start(l);
+};
+
+function show(id){
+  ["setup","quiz","results"].forEach(s=>$("#"+s).classList.toggle("hidden",s!==id));
+  $("#quitBtn").classList.toggle("hidden",id==="setup");
+  window.scrollTo({top:0});
+}
+$("#quitBtn").onclick=()=>{renderChips();show("setup");};
+
+function buildStrip(){
+  const s=$("#strip"); s.innerHTML="";
+  state.list.forEach(()=>{const d=document.createElement("i");d.className="tick";s.appendChild(d);});
+}
+function paintStrip(){
+  [...$("#strip").children].forEach((d,k)=>{
+    d.className="tick"+(state.ans[k]===undefined?(k===state.i?" cur":""):(state.ans[k].skip?" skip":state.ans[k].ok?" ok":" bad"));
+  });
+}
+
+function renderQ(){
+  const q=state.list[state.i]; state.answered=false;
+  $("#qTopic").textContent=TOPICS[q.t];
+  $("#qPos").textContent=`${state.i+1} de ${state.list.length}`;
+  $("#qStem").textContent=q.q;
+  const ul=$("#qOpts"); ul.innerHTML="";
+  q.order.forEach((orig,pos)=>{
+    const li=document.createElement("li");
+    const b=document.createElement("button");
+    b.className="opt"; b.dataset.orig=orig;
+    b.innerHTML=`<span class="l">${"ABCDE"[pos]}</span><span></span>`;
+    b.lastChild.textContent=q.o[orig];
+    b.onclick=()=>answer(orig);
+    li.appendChild(b); ul.appendChild(li);
+  });
+  $("#fb").innerHTML="";
+  $("#nextBtn").disabled=true;
+  $("#nextBtn").textContent= state.i===state.list.length-1?"Ver resultado":"Próxima";
+  $("#skipBtn").classList.remove("hidden");
+  $("#backBtn").disabled= state.i===0;
+  const a=state.ans[state.i];
+  if(a&&!a.skip) showAnswered(false);
+  else if(a&&a.skip) $("#nextBtn").disabled=false;
+  updateScore(); paintStrip();
+}
+function updateScore(){
+  const done=state.ans.filter(a=>a&&!a.skip).length, ok=state.ans.filter(a=>a&&a.ok).length, sk=state.ans.filter(a=>a&&a.skip).length;
+  $("#liveScore").textContent= (done? `${ok} de ${done} corretas` : "") + (sk? `${done?" · ":""}${sk} puladas` : "");
+}
+function answer(orig){
+  if(state.answered) return;
+  const q=state.list[state.i];
+  state.ans[state.i]={pick:orig,ok:orig===q.a};
+  showAnswered(true);
+}
+function showAnswered(focus){
+  state.answered=true;
+  const q=state.list[state.i], orig=state.ans[state.i].pick, ok=orig===q.a;
+  document.querySelectorAll(".opt").forEach(b=>{
+    const o=+b.dataset.orig; b.disabled=true;
+    if(o===q.a) b.classList.add("right");
+    else if(o===orig) b.classList.add("wrong");
+    else b.classList.add("dim");
+  });
+  const fb=$("#fb");
+  fb.innerHTML=`<div class="fb"><p class="v ${ok?"ok":"bad"}"></p><p class="e"></p><ul class="cm"></ul></div>`;
+  if(q.c){const ul=fb.querySelector(".cm");q.order.forEach((orig,pos)=>{const li=document.createElement("li");if(orig===q.a)li.className="k";li.innerHTML=`<b>${"ABCDE"[pos]}</b><span></span>`;li.lastChild.textContent=q.c[orig];ul.appendChild(li);});}
+  fb.querySelector(".v").textContent= ok?"Correto.":`Incorreto. Resposta: ${"ABCDE"[q.order.indexOf(q.a)]}.`;
+  fb.querySelector(".e").textContent="Raciocínio: "+q.e;
+  $("#skipBtn").classList.add("hidden");
+  $("#nextBtn").disabled=false; if(focus) $("#nextBtn").focus({preventScroll:true});
+  updateScore(); paintStrip();
+}
+$("#backBtn").onclick=()=>{
+  if(state.i>0){state.i--;renderQ();window.scrollTo({top:0});}
+};
+$("#skipBtn").onclick=()=>{
+  if(state.answered) return;
+  state.ans[state.i]={skip:true,ok:false};
+  if(state.i<state.list.length-1){state.i++;renderQ();window.scrollTo({top:0});}
+  else results();
+};
+$("#nextBtn").onclick=()=>{
+  if(state.i<state.list.length-1){state.i++;renderQ();window.scrollTo({top:0});}
+  else results();
+};
+
+document.addEventListener("keydown",e=>{
+  if($("#quiz").classList.contains("hidden")) return;
+  const n=parseInt(e.key,10);
+  if(n>=1&&n<=5&&!state.answered){
+    const b=document.querySelectorAll(".opt")[n-1]; if(b) b.click();
+  } else if(e.key==="ArrowLeft"){
+    $("#backBtn").click();
+  } else if(e.key==="ArrowRight"&&!$("#nextBtn").disabled){
+    $("#nextBtn").click();
+  } else if((e.key==="s"||e.key==="S")&&!state.answered){
+    $("#skipBtn").click();
+  } else if(e.key==="Enter"&&state.answered&&document.activeElement!==$("#nextBtn")){
+    $("#nextBtn").click();
+  }
+});
+
+function results(){
+  const tot=state.list.length, ok=state.ans.filter(a=>a&&a.ok).length;
+  const pct=Math.round(ok/tot*100);
+  const sk=state.ans.filter(a=>a&&a.skip).length;
+  $("#rPct").innerHTML=`${pct}%<span> · ${ok} de ${tot}${sk?` · ${sk} puladas`:""}</span>`;
+  $("#rLead").textContent= pct>=80?"Ótimo domínio do conteúdo. Revise os pontos que escaparam abaixo.":pct>=60?"Boa base. Os temas com menor aproveitamento merecem uma segunda leitura.":"Vale revisar o material dos temas abaixo e refazer as questões erradas.";
+  const by={};
+  state.list.forEach((q,k)=>{by[q.t]=by[q.t]||{n:0,ok:0};by[q.t].n++;if(state.ans[k]&&state.ans[k].ok)by[q.t].ok++;});
+  const tb=$("#rTable"); tb.innerHTML="";
+  Object.keys(TOPICS).filter(k=>by[k]).forEach(k=>{
+    const r=by[k], p=Math.round(r.ok/r.n*100);
+    const tr=document.createElement("tr");
+    tr.innerHTML=`<td>${TOPICS[k]}<div class="bar"><i style="width:${p}%"></i></div></td><td class="r">${r.ok}/${r.n}</td>`;
+    tb.appendChild(tr);
+  });
+  const wrong=state.list.filter((q,k)=>!(state.ans[k]&&state.ans[k].ok));
+  $("#retryWrongBtn").classList.toggle("hidden",!wrong.length);
+  $("#retryWrongBtn").onclick=()=>start(wrong.map(({order,...q})=>q));
+  const rv=$("#review"); rv.innerHTML="";
+  if(wrong.length){
+    const h=document.createElement("h2"); h.style.cssText="font-size:1rem;margin:0 0 4px"; h.textContent="Questões para revisar"; rv.appendChild(h);
+    state.list.forEach((q,k)=>{
+      const a=state.ans[k]; if(a&&a.ok) return;
+      const d=document.createElement("div"); d.className="rev";
+      d.innerHTML=`<p class="meta"><span class="topic"></span></p><p class="stem"></p><p class="ans">Sua resposta: <b class="y"></b></p><p class="ans">Correta: <b class="c"></b></p><p class="ex"></p>`;
+      d.querySelector(".topic").textContent=TOPICS[q.t];
+      d.querySelector(".stem").textContent=q.q;
+      d.querySelector(".y").textContent=(a&&!a.skip)?q.o[a.pick]:"pulada";
+      d.querySelector(".c").textContent=q.o[q.a];
+      d.querySelector(".ex").textContent=q.e;
+      rv.appendChild(d);
+    });
+  }
+  show("results");
+}
+$("#restartBtn").onclick=()=>{renderChips();show("setup");};
+
+renderChips();
+</script>
+</body>
+</html>
